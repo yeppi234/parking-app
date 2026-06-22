@@ -6,8 +6,9 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.yourcompany.parking"
     },
     "android": {
       "package": "com.yourcompany.parking",
