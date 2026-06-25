@@ -663,18 +663,22 @@ useEffect(() => {
         setToastVisible(true);
         return;
       }
-      const originalTotalMinutes = calculateTotalParkingTime(parkingData.originalTime) + 30;
-      const newTotalRegistered = parkingData.existingMinutes + remainingMinutes;
-      const remainingAfterRegister = originalTotalMinutes - newTotalRegistered;
-      if (originalTotalMinutes > 600) {
-        const extraMinutes = originalTotalMinutes - 600;
+
+      // ===== 🔥 수정된 부분: 남은 시간 계산 =====
+      const baseTime = calculateTotalParkingTime(parkingData.originalTime); // 기본 주차 시간 (유예 제외)
+      const maxRegisteredTime = Math.min(baseTime + 30, 600); // 최대 등록 가능 시간 (10시간 = 600분)
+      const remainingTime = maxRegisteredTime - baseTime; // 실제 남은 시간 (유예 시간 제외)
+
+      // 10시간 초과 여부는 기본 시간 기준으로 판단
+      if (baseTime > 600) {
+        const extraMinutes = baseTime - 600;
         setToastType('error');
         setToastTitle('⚠️ 10시간 초과!');
         setToastMessage(`${extraMinutes}분 초과하여 추가요금이 발생합니다`);
-      } else if (remainingAfterRegister <= 30 && remainingAfterRegister > 0) {
+      } else if (remainingTime <= 30 && remainingTime > 0) {
         setToastType('success');
         setToastTitle('주차 등록 완료');
-        setToastMessage(`${remainingAfterRegister}분 내로 출차 해주세요`);
+        setToastMessage(`${remainingTime}분 내로 출차 해주세요`);
       } else {
         setToastType('success');
         setToastTitle('주차 등록 완료');
